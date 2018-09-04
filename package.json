@@ -1,0 +1,18 @@
+{
+  "title": "Fast Copy Links",
+  "name": "fcl",
+  "version": "1.0.0",
+  "description": "Copy links on Ctrl+C.",
+  "main": "index.js",
+  "author": "ColdSpirit",
+  "permissions": {
+    "private-browsing": true
+  },
+  "icon": "resource://@fcl/icon-48.png",
+  "icon64": "resource://@fcl/icon-64.png",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+    <Description about="urn:mozilla:install-manifest">
+          <em:id>@fcl</em:id>
+          <em:type>2</em:type>
+          <em:bootstrap>true</em:bootstrap>
+          <em:unpack>false</em:unpack>
+          <em:version>1.0.0</em:version>
+          <em:name>Fast Copy Links</em:name>
+          <em:description>Copy links on Ctrl+C.</em:description>
+          <em:creator>ColdSpirit</em:creator>
+          <em:iconURL>resource://@fcl/icon-48.png</em:iconURL>
+
+          <em:targetApplication>
+            <Description>
+              <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+              <em:minVersion>38.0a1</em:minVersion>
+              <em:maxVersion>39.0</em:maxVersion>
+</Description>
+</em:targetApplication>
+
+          <em:targetApplication>
+            <Description>
+              <em:id>{aa3c5121-dab2-40e2-81ca-7ea25febc110}</em:id>
+              <em:minVersion>38.0a1</em:minVersion>
+              <em:maxVersion>39.0</em:maxVersion>
+</Description>
+</em:targetApplication>
+
+
+    </Description>
+
+</RDF>
