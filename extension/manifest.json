@@ -1,0 +1,37 @@
+{
+
+	"manifest_version": 2,
+	"name": "Fast Copy Links",
+	"version": "1.1",
+
+	"description": "Copy links on Ctrl+C.",
+	"icons": {
+		"48": "icons/icon-48.png",
+		"64": "icons/icon-64.png"
+	},
+
+	"applications": {
+		"gecko": {
+			"strict_min_version": "61.0"
+		}
+	},
+
+	"permissions": [
+		"clipboardWrite"
+	],
+
+	"browser_action": {
+		"default_icon": "icons/icon-48.png",
+		"default_title": "Fast Copy Links",
+		"default_popup": "popup/options.html"
+	},
+
+	"background": {
+		"scripts": ["/scripts/background.js"]
+	},
+
+	"content_scripts": [{
+		"matches": ["<all_urls>"],
+		"js": ["/scripts/content.js"]
+	}]
+}
