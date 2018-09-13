@@ -7,16 +7,38 @@
 "use strict"
 
 /*
-	init data
+    DEBUG
 */
 
 const DEBUG = false;
+const FILENAME = "background.js";
 
-if (!DEBUG)
-	console.log = function(){};
+if (DEBUG)
+{
+    console.log = function() {
+        var context = FILENAME + ":";
+        return Function.prototype.bind.call(console.log, console, context);
+    }();
+}
+else
+{
+    console.log = function(){};
+}
 
-const delim = "\r\n";
+/*
+	init data
+*/
+
+const DELIM = "\r\n";
 var links = [];
+//var port;
+
+// get browser version
+var browserVersion;
+browser.runtime.getBrowserInfo().then(function(info)
+{
+    browserVersion = parseInt(info.version, 10) || -1;
+});
 
 /*
 	functions for link storage
@@ -24,12 +46,7 @@ var links = [];
 
 function linksToText()
 {
-	return links.join(delim);
-}
-
-function addLink(newLink)
-{
-	links.push(newLink);
+	return links.join(DELIM);
 }
 
 /*
@@ -39,36 +56,76 @@ function addLink(newLink)
 function clipboardWrite(newText)
 {
 	console.log("Saving to clipboard: " + newText);
-	navigator.clipboard.writeText(newText);
+
+    // ver 63 needed for clipboard.writeText
+    if (browserVersion < 63)
+    {
+        sendCommandToActiveTab("clipboard-write", newText);
+    }
+    else
+    {
+    	navigator.clipboard.writeText(newText);
+    }
 }
 
 /*
 	messages
 */
 
-function handleMessage(request, sender, sendResponse)
+function onMessage(message)
 {
-	console.log("Got a command: " + request.command);
+    runCommand(message.command, message.info);
+}
 
-	switch (request.command)
+function sendMessage(message)
+{
+    browser.runtime.sendMessage(message);
+}
+
+/*
+    commands
+*/
+
+function runCommand(command, info)
+{
+	console.log("Running command: " + command);
+
+	switch (command)
 	{
+	    // adds link to list and copy to clipboard
 		case "add-link":
-			addLink(request.link);
-			clipboardWrite(request.link);
+	        links.push(info);
+			clipboardWrite(info);
 			break;
 
+        // returns links to requester
 		case "request-links":
-			sendResponse({linkList: linksToText()});
-			break
+			sendCommand("show-links", linksToText());
+			break;
 
+        // copies all links from list to clipboard
 		case "copy-links":
 			clipboardWrite(linksToText());
 			break;
 
+        // clears link list
 		case "clear-links":
 			links = [];
 			break;
-	}
+	};
+}
+
+function sendCommand(command, info)
+{
+    console.log("Sending command: " + command + ". With info: " + info);
+    sendMessage({command: command, info: info});
+}
+
+function sendCommandToActiveTab(command, info)
+{
+    browser.tabs.query({active: true, currentWindow: true}).then(function(tabs){
+        browser.tabs.sendMessage(tabs[0].id, {command: command, info: info});
+    });
 }
 
 /*
@@ -76,7 +133,7 @@ function handleMessage(request, sender, sendResponse)
 */
 
 // listen for messages
-browser.runtime.onMessage.addListener(handleMessage);
+browser.runtime.onMessage.addListener(onMessage);
 
 // log
 console.log("background.js loaded");

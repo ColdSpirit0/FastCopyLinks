@@ -2,6 +2,8 @@
 	wait for ctrl+c press
 	get hovered link
 	send to background
+
+	helps copy to clipboard
 */
 
 (function() {
@@ -15,14 +17,30 @@
 	}
 	window.hasRun = true;
 
+    /*
+        DEBUG
+    */
+
+    const DEBUG = false;
+    const FILENAME = "content.js";
+
+    if (DEBUG)
+    {
+        console.log = function() {
+            var context = FILENAME + ":";
+            return Function.prototype.bind.call(console.log, console, context);
+        }();
+    }
+    else
+    {
+        console.log = function(){};
+    }
+
 	/*
 		init variables
 	*/
 
-	const DEBUG = false;
-
-	if (!DEBUG)
-		console.log = function(){};
+	//var port = browser.runtime.connect({name: "content-script-port"});
 
 	/*
 		copy link functions
@@ -72,9 +90,48 @@
 		messages
 	*/
 
+	function onMessage(message)
+	{
+	    runCommand(message.command, message.info);
+	};
+
+	function sendMessage(message)
+	{
+	    browser.runtime.sendMessage(message);
+	}
+
+	/*
+	    commands
+	*/
+
+	function runCommand(command, info)
+	{
+	    console.log("Running command: " + command);
+
+	    switch(command)
+	    {
+	        // copies text to clipboard
+	        case "clipboard-write":
+                const el = document.createElement('textarea');
+                el.value = info;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+	            break;
+	    }
+	}
+
+	function sendCommand(command, info)
+	{
+	    console.log("Sending command: " + command + ". With info: " + info);
+	    sendMessage({command: command, info: info});
+	}
+
 	function sendLink(link)
 	{
-		browser.runtime.sendMessage({command: "add-link", link: link});
+	    console.log("Sending link: " + link);
+		sendCommand("add-link", link);
 	}
 
 	/*
@@ -106,6 +163,8 @@
 			if (link) { sendLink(link); }
 		}
 	},false);
+
+	browser.runtime.onMessage.addListener(onMessage);
 
 	console.log("content.js loaded");
 })();

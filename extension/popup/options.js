@@ -1,19 +1,27 @@
+"use strict"
+
 /*
-	work with link array
-	load it to clipboard
-	save to file
+    DEBUG
 */
 
-"use strict"
+const DEBUG = false;
+const FILENAME = "options.js";
+
+if (DEBUG)
+{
+    console.log = function() {
+        var context = FILENAME;
+        return Function.prototype.bind.call(console.log, console, context);
+    }();
+}
+else
+{
+    console.log = function(){};
+}
 
 /*
 	init variables
 */
-
-const DEBUG = false;
-
-if (!DEBUG)
-	console.log = function(){};
 
 var info = document.querySelector(".info");
 var linkList = document.querySelector(".link-list");
@@ -22,9 +30,37 @@ var linkList = document.querySelector(".link-list");
 	messages
 */
 
-function sendCommand(command, rfun)
+function onMessage(message)
 {
-	browser.runtime.sendMessage({command: command}).then(rfun);
+    runCommand(message.command, message.info);
+}
+
+function sendMessage(message)
+{
+    browser.runtime.sendMessage(message);
+}
+
+/*
+    commands
+*/
+
+function runCommand(command, info)
+{
+	console.log("Running command: " + command);
+
+	switch (command)
+	{
+	    // add links to textarea
+		case "show-links":
+		    linkList.value = info;
+			break;
+	};
+}
+
+function sendCommand(command, info)
+{
+    console.log("Sending command: " + command + ". With info: " + info);
+    sendMessage({command: command, info: info});
 }
 
 /*
@@ -43,12 +79,17 @@ function onButtonPressed(buttonId)
 	switch(buttonId)
 	{
 		case "button-copy":
-			copyLinks();
-			changeInfo("All links copied");
+		    if (linkList.value.length > 0) {
+        	    sendCommand("copy-links");
+		    }
+		    else {
+		        changeInfo("Nothing to copy!");
+		    }
 			break;
 
 		case "button-clear":
-			clearLinks();
+        	sendCommand("clear-links");
+	        requestLinks();
 			changeInfo("Links cleared");
 			break;
 	}
@@ -72,23 +113,9 @@ function changeInfo(newInfo)
 	info.innerHTML = newInfo;
 }
 
-function updateLinks()
+function requestLinks()
 {
-	// send command to bg script
-	sendCommand("request-links", function(message){
-		linkList.value = message.linkList;
-	});
-}
-
-function copyLinks()
-{
-	sendCommand("copy-links");
-}
-
-function clearLinks()
-{
-	sendCommand("clear-links");
-	updateLinks();
+    sendCommand("request-links");
 }
 
 /*
@@ -108,11 +135,13 @@ function listenForClicks()
 	do work
 */
 
+browser.runtime.onMessage.addListener(onMessage);
+
 // set default info
 changeInfo();
 
 listenForClicks();
 
-updateLinks();
+requestLinks();
 
 console.log("options.js loaded");
