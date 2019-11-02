@@ -119,6 +119,19 @@
                 document.execCommand('copy');
                 document.body.removeChild(el);
 	            break;
+			
+			// get link from page
+			case "get-hovered-link":
+			
+				// get hovered element
+				var target = getInnermostHovered();
+
+				// then recursive find link from top element to "document" element
+				var link = findLink(target);
+
+				//if found
+				if (link) { sendLink(link); }
+				break;
 	    }
 	}
 
@@ -148,19 +161,7 @@
 		if ( key == 67 && ctrl )
 		{
 			console.log("Ctrl+C pressed");
-
-			/*
-				get link from page
-			*/
-
-			// get hovered element
-			var target = getInnermostHovered();
-
-			// then recursive find link from top element to "document" element
-			var link = findLink(target);
-
-			//if found
-			if (link) { sendLink(link); }
+			sendCommand("ctrl-c-event");
 		}
 	},false);
 

@@ -112,6 +112,10 @@ function runCommand(command, info)
 		case "clear-links":
 			links = [];
 			break;
+		
+		// get links from page
+		case "ctrl-c-event":
+			sendCommandToActiveTab("get-hovered-link");
 	};
 }
 
