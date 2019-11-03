@@ -10,6 +10,8 @@
     DEBUG
 */
 
+//browser.storage.local.clear()
+
 const DEBUG = false;
 const FILENAME = "background.js";
 
@@ -31,7 +33,7 @@ else
 
 const DELIM = "\r\n";
 var links = [];
-//var port;
+var playCopySound = true;
 
 // get browser version
 var browserVersion;
@@ -66,6 +68,12 @@ function clipboardWrite(newText)
     {
     	navigator.clipboard.writeText(newText);
     }
+	
+	if (playCopySound)
+	{
+		var audio = new Audio(browser.runtime.getURL("sounds/pop.mp3"));
+		audio.play();
+	}
 }
 
 /*
@@ -133,8 +141,28 @@ function sendCommandToActiveTab(command, info)
 }
 
 /*
+	setup storage
+*/
+
+browser.storage.local.get("play-copy-sound").then((item) => {
+	
+	// if first launch
+	if (item["play-copy-sound"] === undefined)
+	{
+		// write default data
+		browser.storage.local.set({"play-copy-sound": playCopySound});
+	}
+});
+
+browser.storage.onChanged.addListener((item) => {
+	playCopySound = item["play-copy-sound"].newValue;
+});
+
+/*
 	do work
 */
+
+// setup copy sound
 
 // listen for messages
 browser.runtime.onMessage.addListener(onMessage);

@@ -23,8 +23,20 @@ else
 	init variables
 */
 
+
 var info = document.querySelector(".info");
 var linkList = document.querySelector(".link-list");
+
+var playSoundOption = document.querySelector("#play-copy-sound");
+var playSoundCheckbox = document.querySelector("#play-copy-sound>input");
+
+// setup storage
+browser.storage.local.get("play-copy-sound").then((item) => {
+	console.log(item);
+	console.log(item["play-copy-sound"]);
+	// apply data to element
+	playSoundCheckbox.checked = item["play-copy-sound"];
+});
 
 /*
 	messages
@@ -128,6 +140,17 @@ function listenForClicks()
 
 		if (isButton(e.target))
 			onButtonPressed(e.target.id);
+	});
+	
+	
+	playSoundOption.addEventListener("click", (e) => {
+		
+		// ignore default checkbox behaviour
+		if (e.target !== playSoundCheckbox)
+			playSoundCheckbox.checked = !playSoundCheckbox.checked;
+		
+		// save data to storage
+		browser.storage.local.set({"play-copy-sound": playSoundCheckbox.checked});
 	});
 }
 
