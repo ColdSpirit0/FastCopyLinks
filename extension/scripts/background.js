@@ -152,6 +152,10 @@ browser.storage.local.get("play-copy-sound").then((item) => {
 		// write default data
 		browser.storage.local.set({"play-copy-sound": playCopySound});
 	}
+	else
+	{
+		playCopySound = item["play-copy-sound"];
+	}
 });
 
 browser.storage.onChanged.addListener((item) => {
