@@ -119,10 +119,10 @@
                 document.execCommand('copy');
                 document.body.removeChild(el);
 	            break;
-			
+
 			// get link from page
 			case "get-hovered-link":
-			
+
 				// get hovered element
 				var target = getInnermostHovered();
 
@@ -148,22 +148,50 @@
 	}
 
 	/*
-		events
+		events and removal protection
 	*/
 
-	document.body.addEventListener("keydown",function(e)
-	{
-		e = e || window.event;
-		var key = e.which || e.keyCode; // keyCode detection
-		var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 17) ? true : false); // ctrl detection
+	var rootElement = document.documentElement;
 
-		// if Ctrl+C pressed
-		if ( key == 67 && ctrl )
+	function attachEvent()
+	{
+		console.log("Attaching event")
+		rootElement.addEventListener("keydown", function(e)
 		{
-			console.log("Ctrl+C pressed");
-			sendCommand("ctrl-c-event");
-		}
-	},false);
+			e = e || window.event;
+			var key = e.which || e.keyCode; // keyCode detection
+			var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 17) ? true : false); // ctrl detection
+
+			// if Ctrl+C pressed
+			if ( key == 67 && ctrl )
+			{
+				console.log("Ctrl+C pressed");
+				sendCommand("ctrl-c-event");
+			}
+		}, false);
+	}
+
+	var observer = new MutationObserver(function(mutations)
+	{
+		mutations.forEach(function(mutation)
+		{
+			// check is event handler in list of removed elements
+			mutation.removedNodes.forEach(function(removedElement)
+			{
+				if (removedElement == rootElement)
+				{
+					console.log("Removed event handler: " + removedElement);
+
+					rootElement = document.documentElement;
+					attachEvent();
+				}
+			});
+		});
+	});
+
+	observer.observe(document, {childList: true});
+
+	attachEvent();
 
 	browser.runtime.onMessage.addListener(onMessage);
 

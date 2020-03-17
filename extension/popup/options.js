@@ -122,7 +122,7 @@ function changeInfo(newInfo)
 
 	console.log("Changing info to: " + newInfo);
 
-	info.innerHTML = newInfo;
+	info.textContent = newInfo;
 }
 
 function requestLinks()
