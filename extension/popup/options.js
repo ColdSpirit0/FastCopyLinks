@@ -117,7 +117,7 @@ function changeInfo(newInfo)
 	// validate
 	if (newInfo == null)
 	{
-		newInfo = "Hover on link and press Ctrl+C";
+		newInfo = "Hover on link and press Ctrl/Cmd+C";
 	}
 
 	console.log("Changing info to: " + newInfo);
@@ -141,14 +141,14 @@ function listenForClicks()
 		if (isButton(e.target))
 			onButtonPressed(e.target.id);
 	});
-	
-	
+
+
 	playSoundOption.addEventListener("click", (e) => {
-		
+
 		// ignore default checkbox behaviour
 		if (e.target !== playSoundCheckbox)
 			playSoundCheckbox.checked = !playSoundCheckbox.checked;
-		
+
 		// save data to storage
 		browser.storage.local.set({"play-copy-sound": playSoundCheckbox.checked});
 	});
