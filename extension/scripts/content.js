@@ -159,11 +159,12 @@
 		rootElement.addEventListener("keydown", function(e)
 		{
 			e = e || window.event;
-			var key = e.which || e.keyCode; // keyCode detection
-			var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 17) ? true : false); // ctrl detection
+			var key = e.key; // keyCode detection
+			var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 'Control') ? true : false); // ctrl detection
+			var cmd = e.metaKey; // Command Key on OSX
 
 			// if Ctrl+C pressed
-			if ( key == 67 && ctrl )
+			if ( key == 'c' && (ctrl ||  cmd))
 			{
 				console.log("Ctrl+C pressed");
 				sendCommand("ctrl-c-event");
