@@ -68,7 +68,7 @@ function clipboardWrite(newText)
     {
     	navigator.clipboard.writeText(newText);
     }
-	
+
 	if (playCopySound)
 	{
 		var audio = new Audio(browser.runtime.getURL("sounds/pop.mp3"));
@@ -120,9 +120,9 @@ function runCommand(command, info)
 		case "clear-links":
 			links = [];
 			break;
-		
+
 		// get links from page
-		case "ctrl-c-event":
+		case "modKey-c-event":
 			sendCommandToActiveTab("get-hovered-link");
 	};
 }
@@ -145,7 +145,7 @@ function sendCommandToActiveTab(command, info)
 */
 
 browser.storage.local.get("play-copy-sound").then((item) => {
-	
+
 	// if first launch
 	if (item["play-copy-sound"] === undefined)
 	{

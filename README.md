@@ -1,10 +1,10 @@
 # Fast Copy Links
 
-Firefox addon, copies hovered links on Ctrl+C.
+Firefox addon, copies hovered links on Ctrl/Cmd+C.
 
 ## What it do
 
-Copies hovered links on Ctrl+C
+Copies hovered links on Ctrl+C (MacOS: Cmd+C).
 
 ## How to install
 
@@ -18,7 +18,7 @@ Addon page: <https://addons.mozilla.org/ru/firefox/addon/fast-copy-links/>.
 
    ![1.png](images/1.png)
 
-2. Hover on other link and press Ctrl+C again
+2. Hover on other link and press Ctrl/Cmd+C again
 
    ![2.png](images/2.png)
 

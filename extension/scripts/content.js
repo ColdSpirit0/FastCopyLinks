@@ -1,5 +1,5 @@
 /*
-	wait for ctrl+c press
+	wait for ctrl/cmd+c press
 	get hovered link
 	send to background
 
@@ -159,14 +159,20 @@
 		rootElement.addEventListener("keydown", function(e)
 		{
 			e = e || window.event;
-			var key = e.which || e.keyCode; // keyCode detection
-			var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 17) ? true : false); // ctrl detection
+			// keyCode detection
+			var key = e.which || e.keyCode;
+			// ctrl/cmd key detection
+			var modKey = e.ctrlKey ? e.ctrlKey : (
+				(key === 17) ? true : (
+					e.metaKey ? true : false
+				)
+			);
 
-			// if Ctrl+C pressed
-			if ( key == 67 && ctrl )
+			// if Ctrl+C or Cmd+C pressed
+			if ( modKey && key == 67 )
 			{
-				console.log("Ctrl+C pressed");
-				sendCommand("ctrl-c-event");
+				console.log("Ctrl/Cmd+C pressed");
+				sendCommand("modKey-c-event");
 			}
 		}, false);
 	}

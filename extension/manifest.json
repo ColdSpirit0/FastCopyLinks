@@ -4,7 +4,8 @@
 	"name": "Fast Copy Links",
 	"version": "1.6",
 
-	"description": "Copy links on Ctrl+C.",
+	"description": "Copy links on Ctrl+C (MacOS: Cmd+C).", 
+
 	"icons": {
 		"48": "icons/icon-48.png",
 		"64": "icons/icon-64.png"
