@@ -2,7 +2,7 @@
 
 	"manifest_version": 2,
 	"name": "Fast Copy Links",
-	"version": "1.6",
+	"version": "1.7",
 
 	"description": "Copy links on Ctrl+C (MacOS: Cmd+C).", 
 
